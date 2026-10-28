@@ -1,0 +1,26 @@
+ALTER TABLE documents 
+ADD CONSTRAINT chk_document_verification_rules 
+CHECK (
+    -- Rule 1: PENDING state requirements
+    (verification_status = 'PENDING' 
+     AND verified_by IS NULL 
+     AND verified_at IS NULL 
+     AND rejection_reason IS NULL)
+    
+    OR
+    
+    -- Rule 2: VERIFIED state requirements
+    (verification_status = 'VERIFIED' 
+     AND verified_by IS NOT NULL 
+     AND verified_at IS NOT NULL 
+     AND rejection_reason IS NULL)
+    
+    OR
+    
+    -- Rule 3: REJECTED state requirements
+    (verification_status = 'REJECTED' 
+     AND verified_by IS NOT NULL 
+     AND verified_at IS NOT NULL 
+     AND rejection_reason IS NOT NULL 
+     AND TRIM(rejection_reason) <> '')
+);
