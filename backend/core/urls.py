@@ -1,5 +1,5 @@
 from django.urls import path
-from . import actions, pages, views
+from . import actions, pages, views, documents_ui
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -12,7 +12,8 @@ urlpatterns = [
     path('transactions/', pages.transactions, name='transactions'),
     path('employees/', pages.employees, name='employees'),
     path('clients/', pages.clients, name='clients'),
-    path('documents/', pages.documents, name='documents'),
+    path('documents/', documents_ui.documents, name='documents'),
+    path('documents/<uuid:document_id>/decide/', documents_ui.decide, name='decide_document'),
     path('appointments/', pages.appointments, name='appointments'),
     path('notifications/', pages.notifications, name='notifications'),
     path('stage-history/', pages.stage_history, name='stage_history'),
