@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block title %}Document review queue{% endblock %}
+{% block content %}
+<h2>Document review queue</h2>
+{% if flash %}<p class="card" style="margin-bottom:12px;color:{% if flash.ok %}#1a7f37{% else %}#b00020{% endif %}">{{ flash.text }}</p>{% endif %}
+{% if rows %}
+<div class="wrapx">
+<table>
+  <tr><th>Client</th><th>Document</th><th>Destination</th><th>Uploaded</th><th>Decision</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.client_name }}</td>
+    <td>{{ r.document_type }}</td>
+    <td>{{ r.destination }}</td>
+    <td>{{ r.uploaded_at }}</td>
+    <td>
+      <form method="post" action="{% url 'decide_document' r.document_id %}" style="display:flex;gap:6px;align-items:center">
+        {% csrf_token %}
+        <input name="reason" placeholder="Reason (required to reject)" style="width:220px">
+        <button name="decision" value="VERIFIED" style="width:auto">Verify</button>
+        <button name="decision" value="REJECTED" style="width:auto;background:#b00020">Reject</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% else %}
+<p class="card">No documents are waiting for review.</p>
+{% endif %}
+{% endblock %}

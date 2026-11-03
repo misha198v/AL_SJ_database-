@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block title %}All tables{% endblock %}
+{% block content %}
+<h2>All tables in the design</h2>
+<div class="wrapx"><table>
+  <tr><th>Table</th><th>Rows</th><th>View</th><th>CSV</th></tr>
+  {% for t in tables %}
+  <tr><td>{{ t.name }}</td><td>{{ t.count }}</td>
+      <td><a href="{% url 'data_table' t.name %}">Open</a></td>
+      <td><a href="{% url 'data_table' t.name %}?csv=1">Download</a></td></tr>
+  {% endfor %}
+</table></div>
+<p>Read-only. The password column of users is never shown.</p>
+{% endblock %}

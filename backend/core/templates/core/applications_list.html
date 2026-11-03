@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="row"><h2>{{ title }}</h2><a href="{% url 'new_application' %}">+ New application</a></div>
+<div class="wrapx"><table>
+  <tr><th>Client</th><th>Agent</th><th>Stage</th><th>Service</th><th>Destination</th><th>Travel date</th><th>Status</th><th></th></tr>
+  {% for r in rows %}
+  <tr><td>{{ r.client }}</td><td>{{ r.agent|default:"not assigned yet" }}</td><td>{{ r.stage_no }}/7 {{ r.stage }}</td>
+      <td>{{ r.service_type }}</td><td>{{ r.destination }}</td><td>{{ r.travel_date }}</td><td>{{ r.status }}</td>
+      <td><a href="{% url 'application_detail' r.application_id %}">Open</a></td></tr>
+  {% empty %}<tr><td colspan="8">No applications yet.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

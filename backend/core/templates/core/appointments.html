@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+<div class="row"><h2>Appointments</h2><a href="{% url 'new_appointment' %}">+ New appointment</a></div>
+<div class="wrapx"><table>
+  <tr><th>When</th><th>Client</th><th>Staff member</th><th>Type</th><th>Status</th><th></th></tr>
+  {% for r in rows %}
+  <tr><td>{{ r.scheduled }}</td><td>{{ r.client }}</td><td>{{ r.staff_member }}</td><td>{{ r.type }}</td><td>{{ r.status }}</td>
+      <td>{% if r.status == 'UPCOMING' %}
+        <form method="post" action="{% url 'appointment_status' r.schedule_id 'complete' %}" style="display:inline">{% csrf_token %}<button style="width:auto;padding:4px 8px">Complete</button></form>
+        <form method="post" action="{% url 'appointment_status' r.schedule_id 'cancel' %}" style="display:inline">{% csrf_token %}<button style="width:auto;padding:4px 8px;background:#b00020">Cancel</button></form>
+      {% endif %}</td></tr>
+  {% empty %}<tr><td colspan="6">No appointments yet.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="center"><div class="card narrow">
+  <h2 style="margin-top:0">Log in</h2>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post">{% csrf_token %}
+    <label>Phone <input name="phone" required autofocus></label>
+    <label>Password <input name="password" type="password" required></label>
+    <button type="submit">Log in</button>
+  </form>
+  <p>New client? <a href="{% url 'register' %}">Register</a></p>
+</div></div>
+{% endblock %}

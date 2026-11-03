@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}AL SJ{% endblock %}</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;color:#1B2A3A;background:#EDF0F3}
+  header{background:#1B2A3A;color:#fff}
+  .bar{max-width:1150px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+  header a{color:#fff;text-decoration:none;margin-right:14px;opacity:.85}
+  header a:hover{opacity:1;text-decoration:underline}
+  main{max-width:1150px;margin:24px auto;padding:0 20px}
+  .center{min-height:75vh;display:flex;align-items:center;justify-content:center}
+  .card{background:#fff;padding:22px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .narrow{width:100%;max-width:400px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:24px}
+  .kpi{background:#fff;padding:16px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .kpi b{display:block;font-size:1.6rem}
+  .kpi span{color:#5B6B7B;font-size:.85rem}
+  .wrapx{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;background:#fff;margin-bottom:24px;font-size:.92rem}
+  th,td{padding:8px 10px;border-bottom:1px solid #E3E8ED;text-align:left;white-space:nowrap}
+  th{background:#F6F8FA;color:#5B6B7B}
+  h2,h3{margin:20px 0 10px}
+  input,button{padding:9px;margin:4px 0;font:inherit;width:100%}
+  button{background:#3742C8;color:#fff;border:0;border-radius:6px;cursor:pointer}
+  label{display:block;margin-top:8px;font-size:.9rem}
+  .error{color:#b00020;margin:8px 0}
+  .row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+  .barline{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .barline div.fill{background:#3742C8;height:16px;border-radius:4px;min-width:2px}
+  .barline .lbl{width:170px}
+  a{color:#3742C8}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <strong>AL SJ Global Tours &amp; Travels</strong>
+    {% if request.session.user %}
+    <nav>
+      {% for item in menu %}<a href="{% url item.1 %}">{{ item.0 }}</a>{% endfor %}
+    </nav>
+    <span>{{ request.session.user.name }} ({{ request.session.user.role }}) <a href="{% url 'logout' %}">Log out</a></span>
+    {% endif %}
+  </div>
+</header>
+<main>
+{% if messages %}{% for m in messages %}<p class="card" style="margin-bottom:12px;color:{% if m.tags == 'error' %}#b00020{% else %}#1a7f37{% endif %}">{{ m }}</p>{% endfor %}{% endif %}
+{% block content %}{% endblock %}</main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="row"><h2>{{ title }}</h2>
+  <span>{{ count }} rows &nbsp; <a href="{{ request.path }}?{% if request.GET.status %}status={{ request.GET.status }}&amp;{% endif %}csv=1">Download CSV</a></span></div>
+<div class="wrapx"><table>
+  <tr>{% for c in columns %}<th>{{ c }}</th>{% endfor %}</tr>
+  {% for row in rows %}<tr>{% for cell in row %}<td>{{ cell|default_if_none:"" }}</td>{% endfor %}</tr>
+  {% empty %}<tr><td colspan="{{ columns|length|default:1 }}">No rows.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

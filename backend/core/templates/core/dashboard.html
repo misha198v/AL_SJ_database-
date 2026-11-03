@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Director dashboard</h2>
+<div class="grid">
+  {% for label, value in kpis %}<div class="kpi"><b>{{ value }}</b><span>{{ label }}</span></div>{% endfor %}
+</div>
+<div class="card" style="margin-bottom:24px">
+  <h3 style="margin-top:0">Applications per pipeline stage</h3>
+  {% for s in stages %}
+  <div class="barline"><span class="lbl">{{ s.stage_order }}. {{ s.stage_name }}</span>
+    <div class="fill" style="width:{{ s.pct }}%"></div><b>{{ s.applications }}</b></div>
+  {% endfor %}
+</div>
+{% for s in sections %}
+<h3>{{ s.title }}</h3>
+<div class="wrapx"><table>
+  <tr>{% for c in s.columns %}<th>{{ c }}</th>{% endfor %}</tr>
+  {% for row in s.rows %}<tr>{% for cell in row %}<td>{{ cell|default_if_none:"" }}</td>{% endfor %}</tr>
+  {% empty %}<tr><td colspan="{{ s.columns|length }}">No data yet.</td></tr>{% endfor %}
+</table></div>
+{% endfor %}
+{% endblock %}

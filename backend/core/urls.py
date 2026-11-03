@@ -1,0 +1,33 @@
+from django.urls import path
+from . import actions, pages, views, documents_ui
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register, name='register'),
+    path('my-applications/', pages.my_applications, name='my_applications'),
+    path('dashboard/', pages.dashboard, name='dashboard'),
+    path('applications/', pages.applications, name='applications'),
+    path('transactions/', pages.transactions, name='transactions'),
+    path('employees/', pages.employees, name='employees'),
+    path('clients/', pages.clients, name='clients'),
+    path('documents/', documents_ui.documents, name='documents'),
+    path('documents/<uuid:document_id>/decide/', documents_ui.decide, name='decide_document'),
+    path('appointments/', pages.appointments, name='appointments'),
+    path('notifications/', pages.notifications, name='notifications'),
+    path('stage-history/', pages.stage_history, name='stage_history'),
+    path('audit-log/', pages.audit, name='audit'),
+    path('reports/revenue/', pages.revenue_report, name='revenue_report'),
+    path('my-clients/', pages.my_clients, name='my_clients'),
+    path('users/', pages.users_list, name='users_list'),
+    path('clients/new/', actions.add_client, name='add_client'),
+    path('employees/new/', actions.add_employee, name='add_employee'),
+    path('applications/new/', actions.new_application, name='new_application'),
+    path('applications/<uuid:app_id>/', actions.application_detail, name='application_detail'),
+    path('appointments/new/', actions.new_appointment, name='new_appointment'),
+    path('appointments/<uuid:schedule_id>/<str:action>/', actions.appointment_status, name='appointment_status'),
+    path('notifications/new/', actions.new_notification, name='new_notification'),
+    path('data/', pages.data_index, name='data_index'),
+    path('data/<str:table>/', pages.data_table, name='data_table'),
+]

@@ -1,0 +1,7 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="card">
+  <h2 style="margin-top:0">Welcome, {{ request.session.user.name }}</h2>
+  <p>Role: {{ request.session.user.role }}. Use the menu above.</p>
+</div>
+{% endblock %}

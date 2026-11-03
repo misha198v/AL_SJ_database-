@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="center"><div class="card narrow" style="max-width:480px">
+  <h2 style="margin-top:0">{{ title }}</h2>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" {% if multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+    {% for name, label, kind, opts, required in fields %}
+      <label>{{ label }}
+      {% if kind == 'select' %}
+        <select name="{{ name }}" {% if required %}required{% endif %}>
+          {% for value, text in opts %}<option value="{{ value }}">{{ text }}</option>{% endfor %}
+        </select>
+      {% elif kind == 'textarea' %}<textarea name="{{ name }}" rows="4" {% if required %}required{% endif %}></textarea>
+      {% else %}<input name="{{ name }}" type="{{ kind }}" {% if required %}required{% endif %}>{% endif %}
+      </label>
+    {% endfor %}
+    <button type="submit">{{ submit }}</button>
+  </form>
+</div></div>
+{% endblock %}

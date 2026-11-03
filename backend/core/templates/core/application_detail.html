@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+{% block title %}Application{% endblock %}
+{% block content %}
+<div class="card" style="margin-bottom:16px">
+  <h2 style="margin-top:0">{{ app.client_name }} to {{ app.destination }}</h2>
+  <p>Stage <b>{{ app.stage_order }}/7 {{ app.stage_name }}</b> &middot; {{ app.service_type }} &middot; status {{ app.status }}<br>
+     Agent: {{ app.agent_name|default:"not assigned yet" }} &middot; Travel date: {{ app.preferred_travel_date }} &middot; Client phone: {{ app.client_phone }}</p>
+  {% if can_assign %}
+  <form method="post" style="display:flex;gap:8px">{% csrf_token %}<input type="hidden" name="action" value="assign">
+    <select name="agent_id"><option value="">(none)</option>{% for v, t in agents %}<option value="{{ v }}">{{ t }}</option>{% endfor %}</select>
+    <button style="width:auto">Assign agent</button></form>
+  {% endif %}
+  {% if can_stage %}
+  <form method="post" style="display:flex;gap:8px">{% csrf_token %}<input type="hidden" name="action" value="stage">
+    <select name="stage_id">{% for v, t in stages %}<option value="{{ v }}">{{ t }}</option>{% endfor %}</select>
+    <button style="width:auto">Move to this stage</button></form>
+  {% endif %}
+</div>
+
+<h3>Documents</h3>
+<div class="wrapx"><table>
+  <tr><th>Type</th><th>File</th><th>Status</th><th>Verified by</th><th>Reason</th>{% if can_decide %}<th>Decision</th>{% endif %}</tr>
+  {% for d in documents %}
+  <tr><td>{{ d.document_type }}</td><td>{{ d.file_path }}</td><td>{{ d.verification_status }}</td><td>{{ d.verifier|default_if_none:"" }}</td><td>{{ d.rejection_reason|default_if_none:"" }}</td>
+  {% if can_decide %}<td>
+    <form method="post" style="display:flex;gap:6px">{% csrf_token %}<input type="hidden" name="action" value="decide"><input type="hidden" name="document_id" value="{{ d.document_id }}">
+      <select name="decision"><option>VERIFIED</option><option>REJECTED</option></select>
+      <input name="reason" placeholder="reason if rejected"><button style="width:auto">Save</button></form></td>{% endif %}</tr>
+  {% empty %}<tr><td colspan="6">No documents yet.</td></tr>{% endfor %}
+</table></div>
+{% if is_client %}
+<div class="card" style="margin-bottom:16px"><form method="post" enctype="multipart/form-data">{% csrf_token %}<input type="hidden" name="action" value="upload">
+  <label>Upload a document (PDF, JPG or PNG, max 5 MB)
+  <select name="document_type"><option value="PASSPORT">Passport</option><option value="NATIONAL_ID">National ID</option><option value="TRAVEL_DECLARATION">Travel declaration</option></select></label>
+  <input type="file" name="file" required><button>Upload</button></form></div>
+{% endif %}
+
+<h3>Payments</h3>
+<div class="wrapx"><table>
+  <tr><th>Started</th><th>Amount</th><th>Method</th><th>Status</th><th>Reference</th><th>Completed</th>{% if can_pay_status %}<th>Provider reply (simulated)</th>{% endif %}</tr>
+  {% for p in payments %}
+  <tr><td>{{ p.initiated_at }}</td><td>{{ p.amount }} {{ p.currency }}</td><td>{{ p.payment_method }}</td><td>{{ p.status }}</td>
+      <td>{{ p.transaction_reference|default_if_none:"" }}</td><td>{{ p.completed_at|default_if_none:"" }}</td>
+  {% if can_pay_status %}<td>
+    {% if p.status == 'PENDING' %}
+      <form method="post" style="display:inline">{% csrf_token %}<input type="hidden" name="action" value="payment_status"><input type="hidden" name="payment_id" value="{{ p.payment_id }}"><input type="hidden" name="status" value="COMPLETED"><button style="width:auto;padding:4px 8px">Complete</button></form>
+      <form method="post" style="display:inline">{% csrf_token %}<input type="hidden" name="action" value="payment_status"><input type="hidden" name="payment_id" value="{{ p.payment_id }}"><input type="hidden" name="status" value="FAILED"><button style="width:auto;padding:4px 8px;background:#b00020">Fail</button></form>
+    {% elif p.status == 'COMPLETED' %}
+      <form method="post" style="display:inline">{% csrf_token %}<input type="hidden" name="action" value="payment_status"><input type="hidden" name="payment_id" value="{{ p.payment_id }}"><input type="hidden" name="status" value="REFUNDED"><button style="width:auto;padding:4px 8px;background:#5B6B7B">Refund</button></form>
+    {% endif %}</td>{% endif %}</tr>
+  {% empty %}<tr><td colspan="7">No payments yet.</td></tr>{% endfor %}
+</table></div>
+{% if is_client %}
+<div class="card" style="margin-bottom:16px"><form method="post">{% csrf_token %}<input type="hidden" name="action" value="pay">
+  <label>Amount (UGX) <input name="amount" type="number" min="1" step="0.01" required></label>
+  <label>Mobile money <select name="payment_method"><option value="MTN_MOMO">MTN Mobile Money</option><option value="AIRTEL_MONEY">Airtel Money</option></select></label>
+  <label>Payer phone <input name="payer_phone" required></label><button>Pay</button></form></div>
+{% endif %}
+
+<h3>Stage history</h3>
+<div class="wrapx"><table>
+  <tr><th>When</th><th>From</th><th>To</th><th>By</th></tr>
+  {% for h in history %}<tr><td>{{ h.changed_at }}</td><td>{{ h.from_stage|default_if_none:"(start)" }}</td><td>{{ h.to_stage }}</td><td>{{ h.changed_by }}</td></tr>
+  {% empty %}<tr><td colspan="4">No history yet.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}
