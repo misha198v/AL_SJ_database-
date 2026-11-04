@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}{% load ui %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<div class="auth-layout">
+<section class="auth-story"><div><span class="eyebrow">AL SJ journey workspace</span><h2>Behind every<br>great journey,<br>a thousand<br>thoughtful details.</h2><p>One place to connect the people, documents and milestones that make travel possible.</p><div class="auth-feature">{% icon 'route' %}<span>Applications to departures.<br>Every step, connected.</span></div></div><span class="auth-story-footer">GLOBAL TOURS & TRAVELS</span></section>
+<section class="auth-form-side" aria-labelledby="signin-heading"><div class="auth-form-inner"><span class="eyebrow">Welcome back</span><h1 id="signin-heading">Your next journey starts here.</h1><p>Sign in to your staff or client workspace.</p>
+{% if error %}<div class="message error" role="alert" tabindex="-1" data-error-summary>{% icon 'info' %}<span>{{ error }}</span></div>{% endif %}
+<form method="post" novalidate data-validate>{% csrf_token %}
+<div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" name="phone" value="{{ request.POST.phone }}" placeholder="Your registered phone number" autocomplete="username" maxlength="20" required data-label="your phone number"><span class="field-help" id="phone-help">Use the number registered to your account.</span></div>
+<div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required data-label="your password"><button class="password-toggle" type="button" data-password-toggle="password" onclick="ALsJUI.togglePassword(this)" aria-label="Show password" aria-pressed="false">{% icon 'eye' %}</button></div></div>
+<button class="btn" type="submit" data-busy-label="Signing in…">Sign in to workspace {% icon 'arrow' %}</button>
+</form><div class="auth-security">{% icon 'shield' %} Access is tailored to your account.</div></div></section>
+</div>
+{% endblock %}

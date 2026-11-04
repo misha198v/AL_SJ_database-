@@ -1,0 +1,52 @@
+{% load static ui %}
+<!doctype html>
+<html lang="en-UG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0D2639">
+<title>{% block title %}{{ screen.title|default:"Travel workspace" }}{% endblock %} · AL SJ</title>
+<link rel="stylesheet" href="{% static 'core/tokens.css' %}">
+<link rel="stylesheet" href="{% static 'core/app.css' %}">
+<script defer src="{% static 'core/app.js' %}"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+{% if request.session.user %}
+<div class="app-layout">
+<aside class="sidebar" id="app-navigation" aria-label="Main navigation">
+  <a class="brand" href="{% url 'home' %}" aria-label="AL SJ workspace home"><span class="brand-symbol">{% icon 'plane' %}</span><span class="brand-name">AL SJ<small>Global tours & travels</small></span></a>
+  <p class="workspace-label">Your workspace</p>
+  <nav class="nav-list" aria-label="Workspace">
+  {% for item in navigation %}<a class="nav-link" href="{% url item.route %}" {% if item.active %}aria-current="page"{% endif %}>{% icon item.icon %}<span>{{ item.label }}</span></a>{% endfor %}
+  </nav>
+  <div class="sidebar-note">{% icon 'route' %}<strong>Every detail. Every journey.</strong><p>A clearer path from application<br>to departure.</p></div>
+  <div class="account"><span class="avatar" aria-hidden="true">{{ request.session.user.name|initial }}</span><div><span class="account-name">{{ request.session.user.name }}</span><span class="account-role">{{ request.session.user.role }}</span></div>
+  <form method="post" action="{% url 'logout' %}" novalidate>{% csrf_token %}<button type="submit" aria-label="Log out" title="Log out">{% icon 'logout' %}</button></form></div>
+</aside>
+<div class="app-main">
+<header class="topbar">
+  <div class="actions"><button id="nav-toggle" onclick="ALsJUI.toggleNavigation()" class="icon-button mobile-toggle" type="button" aria-controls="app-navigation" aria-expanded="false" aria-label="Toggle navigation">{% icon 'menu' %}</button>
+  <div class="breadcrumb"><span>Workspace</span>{% icon 'chevron' %}<strong>{{ screen.title|default:"Overview" }}</strong></div></div>
+  <div class="topbar-right"><span class="topbar-date">{% now "D, d M Y" %}</span><span class="role-label">{% icon 'shield' %}{{ request.session.user.role }}</span></div>
+</header>
+{% else %}
+<header class="public-nav"><a class="brand" href="{% url 'home' %}" aria-label="AL SJ home"><span class="brand-symbol">{% icon 'plane' %}</span><span class="brand-name">AL SJ<small>Global tours & travels</small></span></a>
+<nav class="public-nav-links" aria-label="Public navigation"><a href="{% url 'home' %}#services">Our services</a><a href="{% url 'home' %}#journey">Your journey</a><a class="btn btn-outline" href="{% url 'login' %}">Open workspace {% icon 'arrow' %}</a></nav></header>
+{% endif %}
+<div class="offline-banner" id="offline-banner" role="status" hidden>You are offline. Check your connection before saving changes.</div>
+<main id="main-content" class="{% if request.session.user %}content{% else %}public-main{% endif %}" tabindex="-1">
+<div id="messages" aria-live="polite">
+{% if messages %}{% for message in messages %}<div class="message {{ message.tags }}" {% if message.tags == 'error' %}role="alert"{% else %}role="status"{% endif %}>{% icon 'info' %}<span>{{ message }}</span></div>{% endfor %}{% endif %}
+</div>
+{% block content %}{% endblock %}
+</main>
+{% if request.session.user %}</div></div>{% else %}
+<footer class="public-footer"><span>© {% now "Y" %} AL SJ Global Tours & Travels</span><span>Thoughtful service. Clearer journeys.</span><a href="{% url 'login' %}">Staff & client sign in {% icon 'arrow' %}</a></footer>
+{% endif %}
+<dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+<h2 id="confirm-title">Confirm change</h2><p id="confirm-description"></p>
+<div class="actions"><button id="confirm-cancel" onclick="ALsJUI.cancelConfirmation()" type="button" class="btn btn-outline">Cancel</button><button id="confirm-action" onclick="ALsJUI.confirmAction()" type="button" class="btn">Confirm change</button></div>
+</dialog>
+</body>
+</html>

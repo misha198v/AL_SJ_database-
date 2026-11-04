@@ -1,0 +1,35 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": [
+    "backend/core/templates",
+    "backend/core/static"
+  ],
+  "locale": "en-UG",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": [
+    "Select/Listbox",
+    "Date",
+    "Form",
+    "Scrollbar",
+    "Toast",
+    "CRUD"
+  ],
+  "ownership": {
+    "Select/Listbox": "native",
+    "Date": "native"
+  },
+  "requiredCommands": [
+    "unit",
+    "ui",
+    "accessibility"
+  ],
+  "commands": {
+    "unit": "backend/.venv/Scripts/python.exe backend/manage.py test core",
+    "ui": "backend/.venv/Scripts/python.exe backend/scripts/verify_ui.py",
+    "accessibility": "node backend/scripts/browser_check.cjs"
+  },
+  "evidence": {
+    "crudFullFlow": "backend/test_integration.py",
+    "failurePaths": "backend/test_integration.py"
+  }
+}

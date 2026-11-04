@@ -1,0 +1,3 @@
+{% load ui %}
+<div class="page-head"><div><span class="eyebrow">{{ screen.eyebrow }}</span><h1>{{ screen.title }}</h1><p>{{ screen.description }}</p></div>
+{% if export_url %}<a class="btn btn-outline" href="{{ export_url }}">{% icon 'download' %} Export CSV</a>{% endif %}</div>

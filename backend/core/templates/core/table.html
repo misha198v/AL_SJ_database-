@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}{% load ui %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+{% query_url csv=1 as export_url %}
+<div class="page-head"><div><span class="eyebrow">{{ screen.eyebrow }}</span><h1>{{ title }}</h1><p>{{ screen.description }}</p></div><a class="btn btn-outline" href="{{ export_url }}">{% icon 'download' %} Export CSV</a></div>
+<section class="panel"><div class="panel-head"><div><h2 class="panel-title">{{ title }} <span class="count">{{ count }}</span></h2><p>Records available to your workspace.</p></div></div><div class="toolbar"><form class="filter-form" method="get" novalidate>{% include 'core/includes/search.html' %}{% if request.GET.status %}<input type="hidden" name="status" value="{{ request.GET.status }}">{% endif %}<button class="btn btn-outline" type="submit">Search</button>{% if query %}<a class="btn btn-ghost" href="{{ request.path }}">Reset</a>{% endif %}</form></div>
+<p class="table-hint">{% icon 'arrow' %} Scroll across to see all details</p><div class="table-scroll" role="region" aria-label="{{ title }}" tabindex="0"><table><thead><tr>{% for column in columns %}<th scope="col">{{ column|humanize }}</th>{% endfor %}</tr></thead><tbody>
+{% for row in rows %}<tr>{% for cell in row %}<td>{% if cell|status_style %}<span class="badge {{ cell|status_style }}">{{ cell|humanize }}</span>{% else %}{{ cell|display }}{% endif %}</td>{% endfor %}</tr>{% empty %}<tr><td colspan="{{ columns|length|default:1 }}"><div class="empty-state">{% icon 'files' %}<h3>{% if query %}No matching records{% else %}No records yet{% endif %}</h3><p>{% if query %}Try another search or clear the current query.{% else %}Records will appear here when they are available.{% endif %}</p>{% if query %}<a class="btn btn-outline" href="{{ request.path }}">Clear search</a>{% endif %}</div></td></tr>{% endfor %}
+</tbody></table></div>{% include 'core/includes/pagination.html' %}</section>
+{% endblock %}

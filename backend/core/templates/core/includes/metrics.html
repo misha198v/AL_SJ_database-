@@ -1,0 +1,1 @@
+{% load ui %}<div class="metric-grid">{% for metric in metrics %}<section class="metric" aria-label="{{ metric.label }}"><div><span class="metric-label">{{ metric.label }}</span><strong class="metric-value">{{ metric.value }}</strong><span class="metric-note">{{ metric.note }}</span></div><span class="metric-icon">{% icon metric.icon %}</span></section>{% endfor %}</div>
