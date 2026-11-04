@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}{% load ui %}
+{% block title %}Book an appointment{% endblock %}
+{% block content %}
+{% include 'core/includes/page_head.html' %}
+<section class="panel form-panel"><div class="panel-head"><div><h2>Appointment details</h2><p>Choose the people, purpose and time.</p></div>{% icon 'calendar' %}</div><div class="panel-body">
+{% if error %}<div class="message error" role="alert" tabindex="-1" data-error-summary>{% icon 'info' %}<span>{{ error }}</span></div>{% endif %}
+<form method="post" novalidate data-validate data-dirty-guard>{% csrf_token %}<div class="form-grid">
+{% for name,label,kind,opts,required in fields %}<div class="field {% if name == 'appointment_type' %}wide{% endif %}"><label for="field-{{ name }}">{{ label }}{% if required %} <span class="muted">*</span>{% endif %}</label>{% if kind == 'select' %}<select id="field-{{ name }}" name="{{ name }}" {% if required %}required{% endif %} data-label="{{ label|lower }}"><option value="">Choose {{ label|lower }}</option>{% for value,text in opts %}<option value="{{ value }}" {% if values|get_item:name == value %}selected{% endif %}>{{ text }}</option>{% endfor %}</select>{% elif kind == 'textarea' %}<textarea style="resize: none" id="field-{{ name }}" name="{{ name }}" rows="4" {% if required %}required{% endif %} data-label="{{ label|lower }}">{{ values|get_item:name }}</textarea>{% else %}<input id="field-{{ name }}" name="{{ name }}" type="{{ kind }}" value="{{ values|get_item:name }}" {% if name == 'appointment_type' %}maxlength="60" placeholder="For example, document submission"{% endif %} {% if required %}required{% endif %} data-label="{{ label|lower }}">{% endif %}{% if name == 'when' %}<span class="field-help" id="time-help">Time is recorded in East Africa Time (UTC+3).</span>{% endif %}</div>{% endfor %}</div>
+<div class="form-actions"><a class="btn btn-outline" href="{% url 'appointments' %}">Cancel</a><button class="btn" type="submit" data-busy-label="Booking appointment…">Book appointment {% icon 'arrow' %}</button></div>
+</form></div></section>
+{% endblock %}

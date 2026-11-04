@@ -1,0 +1,6 @@
+{% extends 'core/base.html' %}{% load ui %}
+{% block title %}All records{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Agency directory</span><h1>All records</h1><p>A read-only directory of the information that connects your agency.</p></div></div>
+<div class="service-grid">{% for table in tables %}<section class="panel"><div class="panel-body"><span class="eyebrow">{{ table.count }} records</span><h2>{{ table.name|humanize }}</h2><p class="gap-top"><a class="cell-link" href="{% url 'data_table' table.name %}">View records {% icon 'arrow' %}</a></p></div></section>{% endfor %}</div>
+{% endblock %}
