@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 db.sqlite3
 media/
+streamlit_app/.venv/
+streamlit_app/.streamlit/secrets.tomlstreamlit_app/uploads/
