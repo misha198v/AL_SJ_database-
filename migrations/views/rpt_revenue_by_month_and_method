@@ -1,0 +1,13 @@
+-- rpt_revenue_by_month_and_method.sql
+-- Revenue from COMPLETED payments, per month and payment method.
+
+CREATE OR REPLACE VIEW rpt_revenue_by_month_and_method AS
+SELECT
+    date_trunc('month', p.completed_at)::date AS month,
+    p.payment_method::text                    AS method,
+    SUM(p.amount)                             AS revenue,
+    COUNT(*)                                  AS payment_count
+FROM payments p
+WHERE p.status = 'COMPLETED'
+  AND p.completed_at IS NOT NULL
+GROUP BY 1, 2;
